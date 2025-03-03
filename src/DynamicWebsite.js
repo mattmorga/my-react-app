@@ -37,7 +37,6 @@ function DynamicWebsite() {
             <InAddition />
             <AdditionalServices />
             <OurOrganization />
-            <OurCustomers />
             <ContactSection />
           </>
         );
