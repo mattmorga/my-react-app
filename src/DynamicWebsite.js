@@ -11,7 +11,7 @@ import AboutUs from './components/AboutUs';
 import OurITSolutions from './components/OurITSolutions';
 import OurTeam from './components/OurTeam';
 import ContactForm from './components/ContactForm';
-import Navbar from './components/Navbar'; // Ensure Navbar is imported
+import Navbar from './components/Navbar';
 
 const DynamicWebsite = () => {
   const [currentView, setCurrentView] = useState("home");
