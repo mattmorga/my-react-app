@@ -4,16 +4,16 @@ import CompanyInfo from './components/CompanyInfo';
 import ServicesSection from './components/ServicesSection';
 import AdditionalServices from './components/AdditionalServices';
 import OurOrganization from './components/OurOrganization';
-import OurCustomers from './components/OurCustomers';
+import OurCustomers from './components/OurCustomers.jsx';
 import ContactSection from './components/ContactSection';
 import InAddition from './components/InAddition';
 import AboutUs from './components/AboutUs';
 import OurITSolutions from './components/OurITSolutions';
 import OurTeam from './components/OurTeam';
 import ContactForm from './components/ContactForm';
-import Navbar from './components/Navbar';
+import Navbar from './components/Navbar'; // Ensure Navbar is imported
 
-const DynamicWebsite = () => {
+function DynamicWebsite() {
   const [currentView, setCurrentView] = useState("home");
   const [showContactForm, setShowContactForm] = useState(false);
 
@@ -61,6 +61,6 @@ const DynamicWebsite = () => {
       {renderContent()}
     </div>
   );
-};
+}
 
 export default DynamicWebsite;
