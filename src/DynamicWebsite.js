@@ -4,7 +4,6 @@ import CompanyInfo from './components/CompanyInfo';
 import ServicesSection from './components/ServicesSection';
 import AdditionalServices from './components/AdditionalServices';
 import OurOrganization from './components/OurOrganization';
-import OurCustomers from './components/OurCustomers.jsx';
 import ContactSection from './components/ContactSection';
 import InAddition from './components/InAddition';
 import AboutUs from './components/AboutUs';
