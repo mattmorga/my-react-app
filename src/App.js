@@ -6,6 +6,8 @@ import ContactForm from './components/ContactForm';
 import AboutUs from './components/AboutUs';
 import OurITSolutions from './components/OurITSolutions';
 import OurTeam from './components/OurTeam';
+import OurCustomers from './components/OurCustomers';
+
 
 const App = () => {
   return (
