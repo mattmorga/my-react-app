@@ -4,6 +4,14 @@ module.exports = {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        sans: ['Inter', 'system-ui', 'sans-serif'],
+      },
+      colors: {  // 👈 Add this colors section
+        'midnight-black': '#0a0a0f',
+        'void-black': '#15151e',
+        'electric-blue': '#00f3ff',
+      },
       animation: {
         'gradient-x': 'gradient-x 8s ease infinite',
         'fade-in-down': 'fade-in-down 0.8s ease-out',

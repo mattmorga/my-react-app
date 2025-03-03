@@ -47,31 +47,36 @@ const InAddition = () => {
   };
 
   return (
-    <div className="flex flex-col items-center p-8 bg-gray-50">
+    <div className="flex flex-col items-center py-16 px-8 bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white">
       {/* Big Rounded Button */}
-      <button
+      <a
+        href="#_"
         onClick={toggleVisibility}
-        className="w-52 h-20 flex items-center justify-center bg-gradient-to-r from-blue-500 to-purple-600 text-white text-lg font-bold rounded-full shadow-lg hover:shadow-2xl transition-all mb-8"
-        title={isVisible ? "Hide" : "Show"}
+        className="relative inline-flex items-center justify-start inline-block px-5 py-3 overflow-hidden font-bold rounded-full group"
       >
-        {isVisible ? "Hide Services" : "Explore Services"}
-      </button>
+        <span className="w-32 h-32 rotate-45 translate-x-12 -translate-y-2 absolute left-0 top-0 bg-white opacity-[3%]"></span>
+        <span className="absolute top-0 left-0 w-48 h-48 -mt-1 transition-all duration-500 ease-in-out rotate-45 -translate-x-56 -translate-y-24 bg-white opacity-100 group-hover:-translate-x-8"></span>
+        <span className="relative w-full text-left text-white transition-colors duration-200 ease-in-out group-hover:text-gray-900">
+          {isVisible ? "Hide Services" : "Explore Services"}
+        </span>
+        <span className="absolute inset-0 border-2 border-white rounded-full"></span>
+      </a>
 
       {/* InAddition Component */}
       {isVisible && (
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full max-w-7xl">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full max-w-7xl mt-8">
           {services.map((service, index) => (
             <div
               key={index}
-              className="flex flex-col bg-white p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow"
+              className="flex flex-col bg-white/10 backdrop-blur-lg p-6 rounded-xl shadow-2xl transform transition-all duration-700 hover:scale-105 hover:shadow-3xl"
             >
-              <div className="flex items-center">
-                <div className="text-3xl mr-4 text-gray-600">{service.logo}</div>
-                <h3 className="text-lg font-semibold text-gray-800">
+              <div className="flex items-center mb-4">
+                <div className="text-4xl mr-4 text-blue-400">{service.logo}</div>
+                <h3 className="text-2xl font-semibold text-gray-200">
                   {service.title}
                 </h3>
               </div>
-              <p className="mt-4 text-gray-600 text-sm">{service.content}</p>
+              <p className="mt-4 text-gray-300 text-sm">{service.content}</p>
             </div>
           ))}
         </div>

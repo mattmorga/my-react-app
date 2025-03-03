@@ -1,42 +1,64 @@
 import React, { useState } from 'react';
-import Navbar from './components/Navbar';
 import HeroSlider from './components/HeroSlider';
 import CompanyInfo from './components/CompanyInfo';
 import ServicesSection from './components/ServicesSection';
 import AdditionalServices from './components/AdditionalServices';
 import OurOrganization from './components/OurOrganization';
-import OurCustomers from './components/Ourcustomers';
+import OurCustomers from './components/OurCustomers';
 import ContactSection from './components/ContactSection';
-import Footer from './components/Footer';
 import InAddition from './components/InAddition';
-import ContactPage from './components/ContactPage';
+import AboutUs from './components/AboutUs';
+import OurITSolutions from './components/OurITSolutions';
+import OurTeam from './components/OurTeam';
+import ContactForm from './components/ContactForm';
+import Navbar from './components/Navbar'; // Ensure Navbar is imported
 
 const DynamicWebsite = () => {
-  const [currentView, setCurrentView] = useState("home"); // State to manage the current view
+  const [currentView, setCurrentView] = useState("home");
+  const [showContactForm, setShowContactForm] = useState(false);
+
+  const handleShowContactForm = () => {
+    setShowContactForm(true);
+    setCurrentView("contact"); // Set the view to contact
+  };
+
+  const handleCloseContactForm = () => {
+    setShowContactForm(false);
+    setCurrentView("home"); // Return to home view
+  };
+
+  const renderContent = () => {
+    switch (currentView) {
+      case "home":
+        return (
+          <>
+            <HeroSlider onNavigate={setCurrentView} onShowContactForm={handleShowContactForm} />
+            <CompanyInfo />
+            <ServicesSection />
+            <InAddition />
+            <AdditionalServices />
+            <OurOrganization />
+            <OurCustomers />
+            <ContactSection />
+          </>
+        );
+      case "company":
+        return <AboutUs />;
+      case "services":
+        return <OurITSolutions />;
+      case "OurTeam":
+        return <OurTeam />;
+      case "contact":
+        return <ContactForm onClose={handleCloseContactForm} />;
+      default:
+        return null;
+    }
+  };
 
   return (
     <div>
-      {/* Pass setCurrentView as a prop to Navbar */}
-      <Navbar onContactClick={() => setCurrentView("contact")} />
-
-      {/* Conditionally render content */}
-      {currentView === "home" ? (
-        <>
-          <HeroSlider />
-          <CompanyInfo />
-          <ServicesSection />
-          <InAddition />
-          <AdditionalServices />
-          <OurOrganization />
-          <OurCustomers />
-          <ContactSection/>
-        </>
-      ) : (
-        <ContactPage />
-      )}
-
-      {/* Footer remains constant */}
-      <Footer />
+      <Navbar onNavigate={setCurrentView} /> {/* Pass the onNavigate function */}
+      {renderContent()}
     </div>
   );
 };

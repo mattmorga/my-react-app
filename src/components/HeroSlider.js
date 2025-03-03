@@ -1,17 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { ChevronLeft, ChevronRight, Pause, Play, Mail } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
 
-const HeroSlider = () => {
+const HeroSlider = ({ onNavigate, onShowContactForm }) => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isPlaying, setIsPlaying] = useState(true);
-  const navigate = useNavigate();
 
   const slides = [
-    { id: 1, image: "/images/tower.jpg?width=1200&height=400",  title: "Welcome To Nixbase Total IT Solution" },
-    { id: 2, image: "/images/vis.jpg?width=1200&height=400",  title: "Enterprise IT Solutions" },
-    { id: 3, image: "/images/3.jpg?width=1200&height=400", title: "Advanced Data Security" },
-    { id: 4, image: "/images/4.jpg?width=1200&height=400",  title: "Network Infrastructure Solutions" }
+    { id: 1, image: "/images/tower.jpg?width=1200&height=400", title: "nixbase Technology", subtitle: "Opportunities don't happen. You create them." },
+    { id: 2, image: "/images/vis.jpg?width=1200&height=400", title: "Firewall & VPN Solutions", subtitle: "We provide you 24/7 best support." },
+    { id: 3, image: "/images/9.jpg?width=1200&height=400", title: "Policy Server Authentication With Storage & Backup", subtitle: "We provide you cost-effective solutions." },
+    { id: 4, image: "/images/8.jpg?width=1200&height=400", title: "Work from anywhere - Tally", subtitle: "Bring Your Office to Home." },
+    { id: 5, image: "/images/gmail.jpg?width=1200&height=400", title: "Complete Mail Server Solutions", subtitle: "We provide you custom mail server." }
   ];
 
   useEffect(() => {
@@ -30,8 +29,7 @@ const HeroSlider = () => {
   };
 
   const handleContact = () => {
-    navigate('/contact');
-    window.scrollTo(0, 0);
+    onShowContactForm();
   };
 
   return (
@@ -45,17 +43,20 @@ const HeroSlider = () => {
           }`}
           aria-hidden={currentSlide !== index}
         >
-          <img 
-            src={slide.image} 
-            alt={slide.title} 
-            className="w-full h-full object-cover" 
+          <img
+            src={slide.image}
+            alt={slide.title}
+            className="w-full h-full object-cover"
             loading="eager"
           />
           <div className="absolute inset-0 bg-gradient-to-r from-black/60 to-black/40 flex items-center justify-center">
             <div className="max-w-4xl px-4 text-center">
-              <h1 className="text-3xl md:text-5xl font-bold text-white mb-6 animate-fadeInUp">
+              <h1 className="text-3xl md:text-5xl font-bold text-white mb-3 animate-fadeInUp">
                 {slide.title}
               </h1>
+              <p className="text-lg md:text-2xl font-semibold text-orange-400 animate-fadeInUp">
+                {slide.subtitle}
+              </p>
             </div>
           </div>
         </div>

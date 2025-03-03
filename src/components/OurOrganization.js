@@ -1,6 +1,34 @@
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 const OurOrganization = () => {
+  const logoRef = useRef(null);
+  const titleRef = useRef(null);
+  const descriptionRef = useRef(null);
+  const [isVisible, setIsVisible] = useState({ logo: false, title: false, description: false });
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setIsVisible((prev) => ({ ...prev, [entry.target.id]: true }));
+          }
+        });
+      },
+      { threshold: 0.1 }
+    );
+
+    if (logoRef.current) observer.observe(logoRef.current);
+    if (titleRef.current) observer.observe(titleRef.current);
+    if (descriptionRef.current) observer.observe(descriptionRef.current);
+
+    return () => {
+      if (logoRef.current) observer.unobserve(logoRef.current);
+      if (titleRef.current) observer.unobserve(titleRef.current);
+      if (descriptionRef.current) observer.unobserve(descriptionRef.current);
+    };
+  }, []);
+
   return (
     <section className="relative py-20 px-6 min-h-screen bg-gray-950 text-white overflow-hidden">
       {/* Background Grid & Gradient */}
@@ -11,20 +39,24 @@ const OurOrganization = () => {
         {/* Header with Logo */}
         <header className="flex items-center justify-center mb-12">
           <img
+            ref={logoRef}
             src="/images/logo.png" // Directly referencing from public folder
             alt="Organization Logo"
-            className="w-16 h-16 rounded-full shadow-lg border-2 border-white/20 hover:border-purple-400 transition duration-300"
+            className={`w-16 h-16 rounded-full shadow-lg border-2 border-white/20 hover:border-purple-400 transition duration-300 ${isVisible.logo ? 'animate-fade-in-down' : ''}`}
           />
         </header>
 
         {/* Main Title */}
-        <h1 className="text-5xl md:text-6xl font-extrabold text-center bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-purple-400 to-pink-300 animate-fade-in-down tracking-tight leading-tight">
+        <h1
+          ref={titleRef}
+          className={`text-5xl md:text-6xl font-extrabold text-center bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-purple-400 to-pink-300 tracking-tight leading-tight ${isVisible.title ? 'animate-fade-in-down' : ''}`}
+        >
           Our Organization
         </h1>
 
         {/* Introduction Section */}
         <article className="mt-12 grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
-          <div className="space-y-6 animate-fade-in-left">
+          <div ref={descriptionRef} className={`space-y-6 animate-fade-in-left ${isVisible.description ? 'animate-fade-in-left' : ''}`}>
             <p className="text-xl leading-relaxed text-gray-300">
               A two-decade-old organization built with care by a passionate team dedicated to excellence.
             </p>
@@ -60,8 +92,9 @@ const OurOrganization = () => {
               className="flex items-center space-x-3 group transition-transform duration-300 hover:translate-x-2 animate-fade-in-up"
               style={{ animationDelay: `${index * 150 + 200}ms` }}
             >
-              <span className="h-4 w-4 bg-gradient-to-br from-blue-400 to-purple-500 rounded-full relative">
+              <span className="w-4 h-4 bg-gradient-to-br from-blue-400 to-purple-500 rounded-full relative flex items-center justify-center">
                 <span className="absolute inset-0 animate-ping rounded-full bg-purple-500 opacity-30"></span>
+                <span className="text-white text-sm">•</span>
               </span>
               <span className="text-gray-200 group-hover:text-white transition-colors">{item}</span>
             </li>
