@@ -6,7 +6,7 @@ import ContactForm from './components/ContactForm';
 import AboutUs from './components/AboutUs';
 import OurITSolutions from './components/OurITSolutions';
 import OurTeam from './components/OurTeam';
-
+import Careers from './components/Careers'; // Import the Careers component
 
 const App = () => {
   return (
@@ -17,6 +17,7 @@ const App = () => {
         <Route path="/about/company" element={<AboutUs />} />
         <Route path="/our-it-solutions" element={<OurITSolutions />} />
         <Route path="/about/OurTeam" element={<OurTeam />} />
+        <Route path="/careers" element={<Careers />} /> {/* Add this line for the Careers page */}
       </Routes>
       <Footer />
     </Router>

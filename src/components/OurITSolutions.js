@@ -29,7 +29,7 @@ const OutSolution = () => {
                 ✅ Cybersecurity & Data Protection
               </li>
               <li className="flex items-center space-x-2">
-                ✅ Custom Software Development
+                ✅ Firewall & VPN Solutions
               </li>
               <li className="flex items-center space-x-2">
                 ✅ IT Strategy & Consulting
@@ -77,12 +77,12 @@ const OutSolution = () => {
                 Key Services We Offer
               </h3>
               <ul className="grid grid-cols-1 md:grid-cols-2 gap-4 text-lg">
-                <li className="flex items-center space-x-2">🚀 Enterprise Application Development</li>
+                <li className="flex items-center space-x-2">🚀 Data Security</li>
                 <li className="flex items-center space-x-2">🔧 IT Infrastructure Management</li>
                 <li className="flex items-center space-x-2">☁️ Cloud Strategy & Optimization</li>
                 <li className="flex items-center space-x-2">🛡️ Cybersecurity & Risk Assessment</li>
-                <li className="flex items-center space-x-2">📊 Data Analytics & Business Intelligence</li>
-                <li className="flex items-center space-x-2">🔗 API Integration & Custom Solutions</li>
+                <li className="flex items-center space-x-2">📊 System Solutions</li>
+                <li className="flex items-center space-x-2">🔗 Data and App Management</li>
               </ul>
             </div>
 

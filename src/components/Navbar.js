@@ -1,10 +1,22 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Menu, X, ChevronDown, MessageCircle, Download, Users, Building } from "lucide-react";
+import { Menu, X, ChevronDown, MessageCircle, Download, Users, Building, User, Eye, EyeOff } from "lucide-react";
+import { MessageSquare } from "lucide-react"; // Import an icon for the title
 
 const Navbar = ({ onNavigate }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState(null);
   const [isChatOpen, setIsChatOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isLogin, setIsLogin] = useState(true);
+  const [showPassword, setShowPassword] = useState(false);
+  const [formData, setFormData] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    password: "",
+  });
+  const [accounts, setAccounts] = useState([]);
+  const [loggedInUser, setLoggedInUser] = useState(null);
   const [messages, setMessages] = useState([
     { sender: "support", text: "Welcome to nixbase live chat support! How can we assist you today?" },
     { sender: "support", text: "Here are some of our IT services:" },
@@ -16,6 +28,7 @@ const Navbar = ({ onNavigate }) => {
   ]);
   const [inputMessage, setInputMessage] = useState("");
   const [questionCount, setQuestionCount] = useState(0);
+  const [selectedService, setSelectedService] = useState(null);
   const mobileMenuRef = useRef(null);
   const dropdownRef = useRef(null);
 
@@ -33,7 +46,8 @@ const Navbar = ({ onNavigate }) => {
           icon: <Download className="h-4 w-4 mr-2" />,
           isPdf: true, // Flag to indicate it's a PDF
         },
-        { name: "Our Team", path: "OurTeam", icon: <Users className="h-4 w-4 mr-2" /> }
+        { name: "Our Team", path: "OurTeam", icon: <Users className="h-4 w-4 mr-2" /> },
+        { name: "Careers", path: "careers", icon: <User className="h-4 w-4 mr-2" /> },
       ],
     },
   ];
@@ -94,11 +108,59 @@ const Navbar = ({ onNavigate }) => {
     }
   };
 
+  const handleFormChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
+
+  const handleFormSubmit = (e) => {
+    e.preventDefault();
+    if (isLogin) {
+      // Check if the account exists
+      const account = accounts.find(acc => acc.email === formData.email && acc.password === formData.password);
+      if (account) {
+        alert("Successfully logged in!");
+        setLoggedInUser(account);
+        setIsModalOpen(false);
+      } else {
+        alert("Incorrect email or password.");
+      }
+    } else {
+      // Create a new account
+      const accountExists = accounts.some(acc => acc.email === formData.email);
+      if (accountExists) {
+        alert("An account with this email already exists.");
+      } else {
+        setAccounts([...accounts, { ...formData }]);
+        alert("Account created successfully!");
+        setIsModalOpen(false);
+        setIsLogin(true); // Switch to login after successful signup
+      }
+    }
+  };
+
+  const serviceDetails = {
+    "Network Security Solutions": "Our Network Security Solutions provide robust protection for your data.",
+    "Cloud Computing Services": "Our Cloud Computing Services offer scalable and secure solutions.",
+    "Data Backup and Recovery": "Our Data Backup and Recovery services ensure your data is safe.",
+    "IT Consulting": "Our IT Consulting services can help optimize your IT infrastructure.",
+    "Software Development": "Our Software Development team can build custom solutions for your business.",
+  };
+
+  const handleKeyPress = (e) => {
+    if (e.key === "Enter") {
+      handleSendMessage();
+    }
+  };
+
   return (
     <>
       <nav className="sticky top-0 z-50 bg-gradient-to-r from-gray-900 to-gray-800 text-white shadow-xl font-poppins">
         <div className="max-w-7xl mx-auto px-6 sm:px-10 lg:px-14 flex items-center justify-between h-20">
-          <div className="flex items-center space-x-3 cursor-pointer" onClick={() => navigateTo("home")}>
+          <div className="flex items-center space-x-3 cursor-pointer ml-2" onClick={() => navigateTo("home")}>
             <img
               className="h-12 w-auto"
               src="/images/logo.png"
@@ -110,7 +172,7 @@ const Navbar = ({ onNavigate }) => {
             </span>
           </div>
 
-          <div className="hidden lg:flex items-center space-x-8 font-inter">
+          <div className="hidden lg:flex items-center space-x-8 font-inter ml-auto mr-4">
             {navigation.map((item) => (
               <div key={item.name} className="relative" ref={dropdownRef}>
                 <button
@@ -150,6 +212,16 @@ const Navbar = ({ onNavigate }) => {
             >
               <MessageCircle className="mr-2 h-5 w-5" />
               Support
+            </button>
+            <button
+              onClick={() => {
+                setIsModalOpen(true);
+                setIsLogin(!loggedInUser);
+              }}
+              className="flex items-center px-3 py-2 hover:text-blue-400 transition-all"
+            >
+              <User className="h-5 w-5 mr-1" />
+              {loggedInUser ? `Hi, ${loggedInUser.firstName}` : "Account"}
             </button>
           </div>
 
@@ -209,42 +281,157 @@ const Navbar = ({ onNavigate }) => {
                 <MessageCircle className="mr-2 h-5 w-5" />
                 Support
               </button>
+              <button
+                onClick={() => {
+                  setIsModalOpen(true);
+                  setIsLogin(!loggedInUser);
+                  setIsOpen(false);
+                }}
+                className="flex items-center px-3 py-2 hover:text-blue-400 transition-all"
+              >
+                <User className="h-5 w-5 mr-1" />
+                {loggedInUser ? `Hi, ${loggedInUser.firstName}` : "Account"}
+              </button>
             </div>
           </div>
         )}
       </nav>
 
       {isChatOpen && (
-        <div className="fixed top-0 right-0 h-full w-96 bg-gray-900 rounded-l-lg shadow-xl border-l border-gray-700 z-50 transform translate-x-0 transition-transform duration-300 ease-in-out">
-          <div className="flex justify-between items-center p-4 border-b border-gray-700">
-            <h2 className="text-xl font-bold text-white">Live Chat Support</h2>
+        <div className="fixed bottom-16 right-4 w-96 bg-gray-900 bg-opacity-90 shadow-lg rounded-lg max-w-lg z-50">
+          <div className="p-4 border-b bg-purple-700 text-white rounded-t-lg flex justify-between items-center">
+            <div className="flex items-center">
+              <MessageSquare className="h-6 w-6 mr-2" />
+              <p className="text-lg font-semibold">Nixbase Support</p>
+            </div>
             <button
               onClick={() => setIsChatOpen(false)}
-              className="text-gray-400 hover:text-white transition"
+              className="text-gray-300 hover:text-gray-400 focus:outline-none"
             >
               <X className="h-6 w-6" />
             </button>
           </div>
-          <div className="p-4 space-y-4 h-[calc(100%-128px)] overflow-y-auto">
+          <div className="p-4 h-80 overflow-y-auto text-gray-200">
             {messages.map((msg, index) => (
-              <div key={index} className={`p-3 rounded-lg shadow-inner ${msg.sender === "support" ? "bg-gray-800" : "bg-blue-900"}`}>
-                <p className={`${msg.sender === "support" ? "text-gray-300" : "text-white"}`}>{msg.text}</p>
+              <div key={index} className={`mb-2 ${msg.sender === "support" ? "text-left" : "text-right"}`}>
+                <p
+                  className={`inline-block py-2 px-4 rounded-lg cursor-pointer ${
+                    msg.sender === "support" ? "bg-gray-700" : "bg-purple-600"
+                  }`}
+                  onClick={() => {
+                    if (msg.text.startsWith("Here are some of our IT services:")) {
+                      setSelectedService(msg.text);
+                    }
+                  }}
+                >
+                  {msg.text}
+                </p>
               </div>
             ))}
+            {selectedService && (
+              <div className="mt-4 p-4 bg-gray-800 rounded-lg">
+                <h3 className="text-lg font-semibold text-purple-300">{selectedService}</h3>
+                <p className="text-gray-300">
+                  {serviceDetails[selectedService.split(": ")[1]]}
+                </p>
+              </div>
+            )}
           </div>
-          <div className="flex items-center p-4 border-t border-gray-700">
+          <div className="p-4 border-t flex">
             <input
               type="text"
-              placeholder="Type your message here..."
+              placeholder="Type a message"
               value={inputMessage}
               onChange={(e) => setInputMessage(e.target.value)}
-              className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg focus:ring-2 focus:ring-blue-500 text-white"
+              onKeyPress={handleKeyPress}
+              className="w-full px-3 py-2 border rounded-l-md focus:outline-none focus:ring-2 focus:ring-purple-500 text-gray-200 bg-gray-800"
             />
             <button
               onClick={handleSendMessage}
-              className="ml-2 px-4 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg flex items-center"
+              className="bg-purple-600 text-white px-4 py-2 rounded-r-md hover:bg-purple-700 transition duration-300"
             >
-              <MessageCircle className="h-5 w-5" />
+              Send
+            </button>
+          </div>
+        </div>
+      )}
+
+      {isModalOpen && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <div className="bg-white rounded-lg w-full max-w-md p-6 shadow-lg">
+            <h2 className="text-2xl font-bold mb-4 text-gray-800">{isLogin ? "Login" : "Sign Up"}</h2>
+            <form onSubmit={handleFormSubmit}>
+              {!isLogin && (
+                <>
+                  <input
+                    type="text"
+                    name="firstName"
+                    placeholder="First Name"
+                    value={formData.firstName}
+                    onChange={handleFormChange}
+                    className="w-full px-4 py-3 mb-4 border rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500"
+                    required
+                  />
+                  <input
+                    type="text"
+                    name="lastName"
+                    placeholder="Last Name"
+                    value={formData.lastName}
+                    onChange={handleFormChange}
+                    className="w-full px-4 py-3 mb-4 border rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500"
+                    required
+                  />
+                </>
+              )}
+              <input
+                type="email"
+                name="email"
+                placeholder="Email"
+                value={formData.email}
+                onChange={handleFormChange}
+                className="w-full px-4 py-3 mb-4 border rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500"
+                required
+              />
+              <div className="relative mb-4">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  name="password"
+                  placeholder="Password"
+                  value={formData.password}
+                  onChange={handleFormChange}
+                  className="w-full px-4 py-3 border rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 pr-10"
+                  required
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-3 text-gray-500"
+                >
+                  {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                </button>
+              </div>
+              <button
+                type="submit"
+                className="w-full px-4 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg shadow-md"
+              >
+                {isLogin ? "Login" : "Sign Up"}
+              </button>
+            </form>
+            <p className="mt-4 text-center text-gray-600">
+              {isLogin ? "Don't have an account?" : "Already have an account?"}{" "}
+              <button
+                type="button"
+                onClick={() => setIsLogin(!isLogin)}
+                className="text-blue-500 hover:underline"
+              >
+                {isLogin ? "Sign Up" : "Login"}
+              </button>
+            </p>
+            <button
+              onClick={() => setIsModalOpen(false)}
+              className="absolute top-2 right-2 text-gray-400 hover:text-gray-600"
+            >
+              <X className="h-6 w-6" />
             </button>
           </div>
         </div>
